@@ -11,8 +11,20 @@ const server = Server(app);
 const socket = io(server);
 
 socket.on("connect", (socket) => {
+  console.log("Connect");
+
   socket.on("registerevents", (event) => {
     socket.join(event);
+  });
+
+  socket.on("disconnecting", (socket2) => {
+    if (socket.handshake.query.alerta) {
+      triggerSocket(socket.handshake.query.alerta, {
+        data: { closedPage: true },
+      });
+    }
+
+    console.log("disconnecting", socket2);
   });
 });
 
